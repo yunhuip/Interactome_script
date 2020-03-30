@@ -13,13 +13,13 @@ from interface import Interface
 
 
 def get_pdb_path():
-    return "/panfs/pan1.be-md.ncbi.nlm.nih.gov/interactomes/pdb"
-    #return "/net/pan1/interactomes/pdb"
+ #   return "/panfs/pan1.be-md.ncbi.nlm.nih.gov/interactomes/pdb"
+    return "/net/pan1/interactomes/pdb"
 
 
 def get_results_path():
-    return "/panfs/pan1.be-md.ncbi.nlm.nih.gov/interactomes/pipeline/Interactome/Workflow/Interfaces"
-    #return "/net/pan1/interactomes/pipeline/Interactome/Workflow/Interfaces"
+#    return "/panfs/pan1.be-md.ncbi.nlm.nih.gov/interactomes/pipeline/Interactome/Workflow/Interfaces"
+    return "/net/pan1/interactomes/pipeline/Interactome/Workflow/Interfaces"
 
 
 def get_threshold():
@@ -29,7 +29,9 @@ def get_threshold():
 
 def extract_contacts(params):
     code, gz_filename = params
-    # print "Find contacts:", code
+#    code, gz_filename = ('10mh', '/net/pan1/interactomes/pdb/mmcif/au/10mh.cif.gz') 
+    print(params)
+#    print ("Find contacts:", code)
     mmcif = mmCifFile(get_pdb_path(), code)
 
     ## ATTENTION! TEMP disabled
@@ -40,12 +42,16 @@ def extract_contacts(params):
     #     n = iface.findContacts(code, iteratoms)
 
     iface = Interface(get_results_path(), get_threshold())
+    print(iface)
     iteratoms = mmcif.iterAtoms()
+    print(iteratoms)
     n = iface.findContacts(code, iteratoms)
 
     # Extract mapping:
+
     try:
         chain_protein_mapping = mmcif.getChainProteinMapping()
+        print(chain_protein_mapping)
         if len(chain_protein_mapping) > 0:
             print(code, [(x[0], len(x[1])) for x in chain_protein_mapping.items()])
         with open(get_mapping_fname(code), 'w') as o:
@@ -139,6 +145,7 @@ if __name__ == '__main__':
     # structure_list = [('10gs', '/panfs/pan1.be-md.ncbi.nlm.nih.gov/interactomes/pdb/mmcif/0g/10gs.cif.gz')]
     structure_list = mmcif.listAll()
     pool.imap_unordered(extract_contacts, structure_list)
+
 
     # pool.imap_unordered(extract_contacts, mmcif.listAll())
     # pool.imap_unordered(extract_protein_mapping, mmcif.listAll())

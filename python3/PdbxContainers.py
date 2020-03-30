@@ -170,7 +170,8 @@ class ContainerBase(object):
 
         return False
 
-
+
+
 class DefinitionContainer(ContainerBase):
     def __init__(self,name):
         super(DefinitionContainer,self).__init__(name)        
@@ -206,7 +207,8 @@ class DefinitionContainer(ContainerBase):
                 self.getObj(nm).dumpId(fh)
 
 
-
+
+
 class DataContainer(ContainerBase):
     ''' Container class for DataCategory objects.
     '''
@@ -271,7 +273,8 @@ class DataCategoryBase(object):
         return (self._name,self._attributeNameList,self._rowList)
 
     
-        
+
+        
 class DataCategory(DataCategoryBase):
     """  Methods for creating, accessing, and formatting PDBx cif data categories.  
     """

@@ -26,6 +26,7 @@ class mmCifFile(Struct):
         self.block = []
         if code is not None:
             self.load(code, asm)
+            print(code)
 
     def getChains(self):
         chains = set([a.chain for a in self.iterAtoms()])
@@ -60,11 +61,13 @@ class mmCifFile(Struct):
         self.block = None
         self.code = None
         self.asm = None
-        with gzip.open(filename) as cif:
+####
+        with gzip.open(filename, mode='rt') as cif:
             pRd = PdbxReader(cif)
             pRd.read(data)
             self.block = data[0]  # the first container
             self.code = code
+            print(self.code)
             self.asm = asm
             return
         raise Exception("Could not load CIF structure {} from file {}".format(code, filename))
@@ -157,10 +160,13 @@ class mmCifFile(Struct):
         # chain_protein_mapping = defaultdict(set)
         chain_protein_mapping = defaultdict(list)
         pdb_chain_mapping = self.getPDBChainMapping()
+        print(pdb_chain_mapping)
         # print pdb_chain_mapping
 
         ref = self.block.getObj("struct_ref_seq")
+        print(ref)
         for i in range(ref.getRowCount()):
+            print(i)
             # ref_id = ref.getValue("ref_id", i)
             chain_author = ref.getValue("pdbx_strand_id", i)
             chain = pdb_chain_mapping.get(chain_author, None)

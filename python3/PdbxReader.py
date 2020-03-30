@@ -69,6 +69,8 @@ class PdbxReader(object):
             self.__parser(self.__tokenizer(self.__ifh), containerList)
         except StopIteration:
             pass
+        except RuntimeError:
+            pass
         else:
             raise PdbxError()
 
@@ -202,8 +204,9 @@ class PdbxReader(object):
 
                 else:
                     self.__syntaxError("Missing value in item-value pair")
-
+####                    
                 curCatName, curAttName, curQuotedString, curWord = next(tokenizer)
+####
                 continue
 
             #
@@ -237,7 +240,6 @@ class PdbxReader(object):
                 # Read the rest of the loop_ declaration
                 while True:
                     curCatName, curAttName, curQuotedString, curWord = next(tokenizer)
-
                     if curCatName is None:
                         break
 
@@ -267,9 +269,8 @@ class PdbxReader(object):
                             curRow.append(curWord)
                         elif curQuotedString is not None:
                             curRow.append(curQuotedString)
-
+####                        
                         curCatName,curAttName,curQuotedString,curWord = next(tokenizer)
-
                     # loop_ data processing ends if -
 
                     # A new _category.attribute is encountered
@@ -293,7 +294,6 @@ class PdbxReader(object):
                     containerList.append(curContainer)
                     categoryIndex = {}
                     curCategory = None
-
                 curCatName,curAttName,curQuotedString,curWord = next(tokenizer)
 
             elif state == "ST_DATA_CONTAINER":
